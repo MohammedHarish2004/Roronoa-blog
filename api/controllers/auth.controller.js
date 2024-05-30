@@ -1,5 +1,6 @@
 import User from '../models/user.model.js'
 import bcryptjs from 'bcryptjs'
+import {errorHandler} from '../utils/error.js'
 
 export const signUp = async (req,res,next)=>{
 
@@ -16,15 +17,14 @@ export const signUp = async (req,res,next)=>{
     }
 
     const hashedPassword = bcryptjs.hashSync(password,10)
-    const newUser = User({username,email,password:hashedPassword})
-    const {password:pass,...rest} = newUser._doc 
+    const newUser = new User({username,email,password:hashedPassword})
     await newUser.save()
-    res.status(200).json(rest)
+    res.status(200).json('Signed up successfully')
   } 
   
   catch (error) {
     if(error.code === 11000){
-        res.status(401).json('Username / email already exist');
+        next(errorHandler(403,'Username / email already exist'))
     }
     else{
         next(error)

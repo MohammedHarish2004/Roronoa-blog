@@ -5,11 +5,13 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/userSlice.js';
+import {FaCheckCircle} from 'react-icons/fa'
 
 export default function SignIn() {
 
   const [formData,setFormData] = useState({})
-  const {loading,error}= useSelector((state)=>state.user)
+  const {loading}= useSelector((state)=>state.user)
+  const [errorMessage,setErrorMessage] = useState(null) 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -25,11 +27,11 @@ export default function SignIn() {
   const handleSubmit = async (e)=>{
     e.preventDefault()
 
-    if(!formData.username || !formData.password) return setError('Please fill out all fields')
+    if(!formData.username || !formData.password) return setErrorMessage('Please fill out all fields')
     try {
 
         dispatch(signInStart())
-
+        setErrorMessage(null)
         const res = await fetch('/api/auth/signin',{
           method:"POST",
           headers:{
@@ -42,26 +44,29 @@ export default function SignIn() {
 
         if(data.success === false){
           dispatch(signInFailure(data.message))
+          setErrorMessage(data.message)
           return
         }
         iziToast.success({
-          icon: 'fas fa-check-circle',
+          icon: <FaCheckCircle/>,
           message: '<b>Signed in successfully!</b>',
           position: 'topRight',
           timeout:1500
     
         });
 
+          setErrorMessage(null)
           dispatch(signInSuccess(data))
           navigate('/')        
     } 
     catch (error) {
       dispatch(signInFailure(error.message))
+      setErrorMessage(error.message)
     }
   }
 
   return (
-    <div className='min-h-screen mt-10'>
+    <div className='min-h-screen mt-10 sm:mt-24'>
       <div className='flex p-4 max-w-3xl mx-auto flex-col md:flex-row md:items-center  gap-5'>
         {/* leftside */}
         <div className="flex-1">
@@ -119,10 +124,10 @@ export default function SignIn() {
               Sign Up
             </Link>
           </div>
-          <div className='mt-5' style={{ minHeight: '60px' }}>
-            {error && 
+          <div className='mt-5' style={{ minHeight: '60px' }}>  
+            {errorMessage &&
               <Alert className='text-red-600 font-medium' color='red'>
-                {error}
+                {errorMessage} 
               </Alert>
             }
           </div>

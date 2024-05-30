@@ -3,6 +3,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import {FaCheckCircle} from 'react-icons/fa'
 
 export default function SignUp() {
 
@@ -43,7 +44,7 @@ export default function SignUp() {
           return
         }
         iziToast.success({
-          icon: 'fas fa-check-circle',
+          icon: <FaCheckCircle/>,
           message: '<b>Signed up successfully!</b>',
           position: 'topRight',
           timeout:1500
@@ -61,7 +62,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className='min-h-screen mt-10'>
+    <div className='min-h-screen mt-10 sm:mt-24'>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
         {/* leftside */}
         <div className="flex-1">

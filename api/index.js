@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import authRouter from './routes/auth.route.js'
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 
@@ -21,6 +22,8 @@ console.log('Server running on port 3000');
 app.use(express.json())
 
 app.use('/api/auth',authRouter)
+
+app.use(cookieParser())
 
 app.use((err,req,res,next)=>{
 

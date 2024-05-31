@@ -61,7 +61,6 @@ export const google = async (req,res,next) =>{
   const {username,email,avatar} = req.body
   try {
     const user = await User.findOne({email})
-    console.log(req.body);
   if(user){
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET)
     const {password:pass,...rest} = user._doc
@@ -86,6 +85,16 @@ export const google = async (req,res,next) =>{
     res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
   }
 
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const signOut = (req,res)=>{
+
+  try {
+    res.clearCookie('access_token')
+    res.status(200).json('Signed Out')
   } catch (error) {
     next(error)
   }

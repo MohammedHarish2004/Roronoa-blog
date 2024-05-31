@@ -5,7 +5,6 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/userSlice.js';
-import {FaCheckCircle} from 'react-icons/fa'
 import OAuth from '../components/OAuth.jsx';
 
 export default function SignIn() {
@@ -49,7 +48,6 @@ export default function SignIn() {
           return
         }
         iziToast.success({
-          icon: <FaCheckCircle/>,
           message: '<b>Signed in successfully!</b>',
           position: 'topRight',
           timeout:1500

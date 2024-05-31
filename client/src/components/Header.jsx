@@ -2,13 +2,56 @@ import React from 'react'
 import {Navbar, TextInput,Button, Dropdown, Avatar} from 'flowbite-react'
 import { Link } from 'react-router-dom'
 import {AiOutlineSearch} from 'react-icons/ai'
-import {FaMoon} from 'react-icons/fa'
+import {FaMoon,FaCheckCircle} from 'react-icons/fa'
 import { useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import Swal from 'sweetalert2'
+import { signOutFailure, signOutStart, signOutSuccess } from '../redux/userSlice'
 
 export default function Header() {
     const path = useLocation().pathname
     const {currentUser} = useSelector(state=>state.user)
+    const dispatch = useDispatch()
+
+    const handleSignOut = ()=>{
+        Swal.fire({
+            title:'Are you sure',
+            text:'Want to sign out',
+            icon:'warning',
+            showCancelButton:true,
+            cancelButtonColor:'#3085d6',
+            confirmButtonColor:'#d33',
+            confirmButtonText:'Yes! Sign Out'
+        }).then(async(result)=>{
+            if(result.isConfirmed){
+                
+               try {
+                
+                dispatch(signOutStart())
+
+                const res = await fetch('/api/auth/signout')
+                const data = await res.json()
+
+                if(data.success === false){
+                    dispatch(signOutFailure(data.message))
+                }
+
+                dispatch(signOutSuccess(data))
+                iziToast.success({
+                    message: '<b>Signed Out successfully!</b>',
+                    position: 'topRight',
+                    timeout:1500
+                  });
+
+
+               } catch (error) {
+                dispatch(signOutFailure(error.message))
+               }
+            }
+        })
+    }
   return (
     <Navbar className='border-b-2'>
         <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
@@ -27,7 +70,7 @@ export default function Header() {
             <Button className='w-12 h-10 hidden md:inline' color='gray' pill>
                 <FaMoon className=''/>
             </Button>
-            {
+           {
                 currentUser ? (
                     <Dropdown arrowIcon={false} inline label={<Avatar alt='user' img={currentUser.avatar} rounded/>}>
                         <Dropdown.Header className='flex flex-col'>
@@ -40,13 +83,17 @@ export default function Header() {
                                 </Dropdown.Item>
                             </Link>
                         <Dropdown.Divider />
-                        <Dropdown.Item>Sign Out</Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
                     </Dropdown>
                 )
                 :
+           <Link to='/sign-in'>
+
                     <Button gradientDuoTone='purpleToBlue' outline>
                         Sign In
                     </Button>
+           </Link>
+
             }
 
             <Navbar.Toggle />

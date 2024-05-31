@@ -45,7 +45,6 @@ export default function SignUp() {
           return
         }
         iziToast.success({
-          icon: <FaCheckCircle/>,
           message: '<b>Signed up successfully!</b>',
           position: 'topRight',
           timeout:1500

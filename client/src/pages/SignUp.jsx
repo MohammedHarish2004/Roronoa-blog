@@ -4,6 +4,7 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import {FaCheckCircle} from 'react-icons/fa'
+import OAuth from '../components/OAuth';
 
 export default function SignUp() {
 
@@ -123,6 +124,7 @@ export default function SignUp() {
                : ('Sign Up')
               }
               </Button>
+              <OAuth />
           </form>
           <div className='mt-4 flex gap-4'>
             <span className='font-medium'>Have an account?</span>

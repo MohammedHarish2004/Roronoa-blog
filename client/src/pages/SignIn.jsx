@@ -6,6 +6,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/userSlice.js';
 import {FaCheckCircle} from 'react-icons/fa'
+import OAuth from '../components/OAuth.jsx';
 
 export default function SignIn() {
 
@@ -117,6 +118,7 @@ export default function SignIn() {
                : ('Sign In')
               }
               </Button>
+              <OAuth />
           </form>
           <div className='mt-4 flex gap-4'>
             <span className='font-medium'>Dont Have an account?</span>

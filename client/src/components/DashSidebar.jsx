@@ -1,5 +1,5 @@
 import {Sidebar} from 'flowbite-react'
-import {HiArrowSmRight, HiUser} from 'react-icons/hi'
+import {HiArrowSmRight, HiDatabase, HiLink, HiShoppingBag, HiTrash, HiUser} from 'react-icons/hi'
 import { useDispatch } from 'react-redux'
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
@@ -63,14 +63,21 @@ export default function DashSidebar() {
     <Sidebar className='w-full md:w-56'>
         <Sidebar.Items>
             <Sidebar.ItemGroup>
-               <Link to='/dashboard?tab=profile'>
-                    <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={'User'} labelColor={'dark'}>
+               <Link to='/dashboard?tab=profile' >
+                    <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={'User'} labelColor={'dark'} as={'div'}>
                         Profile
                     </Sidebar.Item>
                </Link>
+               <Sidebar.Collapse icon={HiLink} label="Account">
+
+                    <Sidebar.Item  icon={HiTrash} className='cursor-pointer' >
+                        Delete Account
+                    </Sidebar.Item>
                     <Sidebar.Item  icon={HiArrowSmRight} className='cursor-pointer' onClick={handleSignOut}>
                         Sign Out
                     </Sidebar.Item>
+                </Sidebar.Collapse>
+                    
             </Sidebar.ItemGroup>
         </Sidebar.Items>
     </Sidebar>

@@ -83,7 +83,7 @@ export default function Header() {
                             <span className='block font-medium text-sm'>User : {currentUser.username}</span>
                             <span className='block font-medium text-sm truncate'>Email : {currentUser.email}</span>
                         </Dropdown.Header>
-                            <Link to='/dashboard?tab=profile'>
+                            <Link to={'/dashboard?tab=profile'}>
                                 <Dropdown.Item>
                                     Profile
                                 </Dropdown.Item>
@@ -94,16 +94,13 @@ export default function Header() {
                 )
                 :
            <Link to='/sign-in'>
-
                     <Button gradientDuoTone='purpleToBlue' outline>
                         Sign In
                     </Button>
            </Link>
 
             }
-
             <Navbar.Toggle />
-
         </div>
 
             <Navbar.Collapse>

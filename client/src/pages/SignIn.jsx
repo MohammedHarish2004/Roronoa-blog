@@ -69,7 +69,7 @@ export default function SignIn() {
       <div className='flex p-4 max-w-3xl mx-auto flex-col md:flex-row md:items-center  gap-5'>
         {/* leftside */}
         <div className="flex-1">
-          <Link to='/' className='text-3xl font-bold dark:text-white'>
+          <Link to='/' className='text-3xl font-bold '>
               <span className='px-4 py-1 bg-gradient-to-br from-purple-600 to-cyan-500 hover:bg-gradient-to-bl "  rounded-lg text-white'>Zoro's</span>
               Blog
           </Link>
@@ -120,7 +120,7 @@ export default function SignIn() {
           </form>
           <div className='mt-4 flex gap-4'>
             <span className='font-medium'>Dont Have an account?</span>
-            <Link to='/sign-up' className='text-blue-700 font-medium'>
+            <Link to='/sign-up' className='text-blue-700 dark:text-cyan-400 font-medium'>
               Sign Up
             </Link>
           </div>

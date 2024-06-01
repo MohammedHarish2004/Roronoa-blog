@@ -120,7 +120,7 @@ export default function Header() {
                             <span>Theme</span>
                             <span>
                             {
-                                theme === 'light' ? <FaMoon className=''/> : <FaSun className='xl' />
+                                theme === 'light' ? <FaMoon /> : <FaSun />
                                 }
                             </span>
                         </div>

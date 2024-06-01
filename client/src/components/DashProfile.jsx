@@ -19,7 +19,6 @@ export default function DashProfile() {
   const[formData,setFormData] = useState({})
   const[loading,setLoading] = useState(false)
   const[error,setError] = useState(false)
-  console.log(formData);
 
   useEffect(()=>{
     if(file){

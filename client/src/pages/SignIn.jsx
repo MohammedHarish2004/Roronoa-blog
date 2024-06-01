@@ -10,7 +10,7 @@ import OAuth from '../components/OAuth.jsx';
 export default function SignIn() {
 
   const [formData,setFormData] = useState({})
-  const {loading}= useSelector((state)=>state.user)
+  const [loading,setLoading]= useState(false)
   const [errorMessage,setErrorMessage] = useState(null) 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -31,6 +31,7 @@ export default function SignIn() {
     try {
 
         dispatch(signInStart())
+        setLoading(true)
         setErrorMessage(null)
         const res = await fetch('/api/auth/signin',{
           method:"POST",
@@ -45,22 +46,24 @@ export default function SignIn() {
         if(data.success === false){
           dispatch(signInFailure(data.message))
           setErrorMessage(data.message)
+          setLoading(false)
           return
         }
         iziToast.success({
           message: '<b>Signed in successfully!</b>',
           position: 'topRight',
           timeout:1500
-    
         });
 
           setErrorMessage(null)
+          setLoading(false)
           dispatch(signInSuccess(data))
           navigate('/')        
     } 
     catch (error) {
       dispatch(signInFailure(error.message))
       setErrorMessage(error.message)
+      setLoading(false)
     }
   }
 

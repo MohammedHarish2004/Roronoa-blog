@@ -8,6 +8,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/userSlice';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import {Link} from 'react-router-dom'
 
 export default function DashProfile() {
   const dispatch = useDispatch()
@@ -147,6 +148,12 @@ export default function DashProfile() {
                   <span className='pl-3'>Loading...</span>
                 </> : 'Update'}
             </Button>
+            {
+              currentUser.isAdmin &&
+             <Link to={'/create-post'}>
+                <Button type="button" className="uppercase w-full" gradientDuoTone='purpleToBlue' outline>Create a Post</Button>
+             </Link>
+            }
             {error &&  
             <Alert color='failure' className='font-medium'>
               {error}

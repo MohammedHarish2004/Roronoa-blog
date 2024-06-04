@@ -98,7 +98,7 @@ export default function CreatePost() {
         timeout:1500
       });
       navigate(`/post/${data.slug}`,{replace:true})
-    } 
+    }  
     catch (error) {
       setPublishError('Something went wrong')
     }

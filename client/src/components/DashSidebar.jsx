@@ -1,11 +1,11 @@
 import {Sidebar} from 'flowbite-react'
-import {HiArrowSmRight, HiLink, HiTrash, HiUser} from 'react-icons/hi'
+import {HiArrowSmRight, HiDocumentText, HiLink, HiTrash, HiUser} from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import Swal from 'sweetalert2'
 import { deleteUserFailure, deleteUserStart, signOutFailure, signOutStart, signOutSuccess } from '../redux/userSlice'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 export default function DashSidebar() {
@@ -15,13 +15,17 @@ export default function DashSidebar() {
     const {currentUser} = useSelector(state=>state.user)
     const [tab,setTab] = useState('')
     const[error,setError] = useState(null)
+    const location = useLocation()
     
     useEffect(()=>{
         const urlParams = new URLSearchParams(location.search)
         const tabFromUrl = urlParams.get('tab')
-        setTab(tabFromUrl)
+        if (tabFromUrl) {
+            setTab(tabFromUrl)
+        }
     },[location.search])
 
+    
     const handleSignOut = ()=>{
         Swal.fire({
             title:'Are you sure',
@@ -120,6 +124,14 @@ export default function DashSidebar() {
                         Profile
                     </Sidebar.Item>
                </Link>
+             {
+                currentUser.isAdmin && 
+                <Link to='/dashboard?tab=posts'>
+                    <Sidebar.Item active={tab === 'posts'} icon={HiDocumentText} labelColor={'dark'} as={'div'} className='mt-2'>
+                        Posts
+                    </Sidebar.Item>
+                </Link>
+             }
                <Sidebar.Collapse icon={HiLink} label="Account">
 
                     <Sidebar.Item  icon={HiTrash} className='cursor-pointer' onClick={handleDelete}>

@@ -24,10 +24,8 @@ export default function Dashboard() {
         <DashSidebar />
       </div>
       {/* Profile */}
-      <div className='mx-auto max-w-lg p-3 w-full'>
       {tab === 'profile' && <DashProfile />}
       {tab === 'posts' && <DashPost />}
-      </div>
     </div>
   )
 }

@@ -108,7 +108,7 @@ export default function DashProfile() {
     }
   }
     return (
-    <div className='p-3'>
+    <div className='w-full max-w-lg mx-auto p-3'>
         <h1 className='text-3xl text-center font-semibold py-7'>Profile</h1>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
           <input type="file" accept='image/*' ref={fileRef} hidden onChange={(e)=>setFile(e.target.files[0])}/>

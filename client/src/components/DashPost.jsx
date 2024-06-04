@@ -7,12 +7,16 @@ export default function DashPost() {
 
   const {currentUser} = useSelector(state=>state.user)
   const [userPosts,setUserPosts] = useState([])
+  const [showmore,setShowmore] = useState(true)
 
   useEffect(()=>{
     const fetchPosts = async ()=>{
       try {
-          const res = await fetch(`/api/post/getposts?${currentUser._id}`)
+          const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`)
           const data = await res.json()
+          if(data.length < 9){
+            setShowmore(false)
+          }
           if(res.ok){
             setUserPosts(data.posts)
           }
@@ -22,10 +26,28 @@ export default function DashPost() {
         console.log(error.message);
       }
     }
-    fetchPosts()
+    if (currentUser.isAdmin) {
+      fetchPosts();
+    }
   },[currentUser._id])
 
-  console.log(userPosts);
+  const handleShowmore = async () => {
+    const startIndex = userPosts.length;
+    try {
+      const res = await fetch(
+        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        if (data.posts.length < 9) {
+          setShowmore(false);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return( 
    <div className='table-auto overflow-x-scroll md:mx-auto p-6 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
@@ -75,6 +97,10 @@ export default function DashPost() {
           ))
         }
       </Table>
+      {
+        showmore && 
+        <button onClick={handleShowmore} className='w-full text-teal-500 self-center text-sm py-7 font-medium hover:underline'>Show more</button>
+      }
       </>
     ) : (
       <p>No posts Available</p>

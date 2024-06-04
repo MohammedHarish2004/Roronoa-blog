@@ -7,9 +7,11 @@ import { app } from '../firebase';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import {useNavigate} from 'react-router-dom'
+import {useSelector} from 'react-redux'
 
 export default function CreatePost() {
 
+  const {currentUser} = useSelector(state=>state.user)
   const fileRef = useRef()
   const[file,setFile] = useState(undefined)
   const[loading,setLoading] = useState(false)
@@ -82,7 +84,7 @@ export default function CreatePost() {
         headers:{
           'Content-Type':'application/json'
         },
-        body:JSON.stringify(formData)
+        body:JSON.stringify(formData,{userId:currentUser._id})
       })
 
       const data = await res.json()

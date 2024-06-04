@@ -2,6 +2,9 @@ import { Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import {useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import Swal from 'sweetalert2'
 
 export default function DashPost() {
 
@@ -49,6 +52,45 @@ export default function DashPost() {
     }
   };
 
+  const handleDeletePost = async(postId,postName)=>{
+
+    Swal.fire({
+      title:'Are you sure want to delete ',
+      text:`${postName}`, 
+      icon:'warning',
+      showCancelButton:true,
+      cancelButtonColor:'#3085d6',
+      confirmButtonColor:'#d33',
+      confirmButtonText:'Yes! Delete'
+  }).then(async(result)=>{
+      if(result.isConfirmed){
+
+        try {
+        const res = await fetch(`/api/post/delete/${postId}/${currentUser._id}`,{
+          method:"DELETE"
+        })
+
+        const data = await res.json()
+
+        if(res.ok){
+          console.log(data.message);
+          iziToast.success({
+            message: '<b>Post deleted successfully!</b>',
+            position: 'topRight',
+            timeout:1500
+          });
+          setUserPosts((prev)=>prev.filter((post)=>post._id !== postId))
+
+        }
+       
+       
+        } 
+        catch (error) {
+          console.log(error.message);
+        }
+      }
+  })
+}
   return( 
    <div className='table-auto overflow-x-scroll md:mx-auto p-6 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
     {currentUser.isAdmin && userPosts.length > 0 ? (
@@ -64,8 +106,8 @@ export default function DashPost() {
         </Table.Head>
         {
           userPosts.map((post)=>(
-            <Table.Body className='divide-y'>
-              <Table.Row className='dark:border-gray-700 dark:bg-gray-800'>
+            <Table.Body key={post._id} className='divide-y'>
+              <Table.Row  className='dark:border-gray-700 dark:bg-gray-800'>
                 <Table.Cell>{new Date(post.updatedAt).toLocaleString()}</Table.Cell>
                 <Table.Cell>
                   <Link to={`/posts/${post.slug}`}>
@@ -88,7 +130,7 @@ export default function DashPost() {
                   </Link>
                 </Table.Cell>
                 <Table.Cell>
-                  <span className='text-red-600 font-medium hover:underline cursor-pointer'>
+                  <span onClick={()=>handleDeletePost(post._id,post.title)} className='text-red-600 font-medium hover:underline cursor-pointer'>
                     Delete
                   </span>
                 </Table.Cell>

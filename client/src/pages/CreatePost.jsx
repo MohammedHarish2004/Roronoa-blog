@@ -4,6 +4,10 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from '../firebase';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import {useNavigate} from 'react-router-dom'
+
 export default function CreatePost() {
 
   const fileRef = useRef()
@@ -12,7 +16,10 @@ export default function CreatePost() {
   const[progress,setProgress] = useState(0)
   const[error,setError] = useState(false)
   const [formData,setFormData] = useState({})
+  const[publishError,setPublishError] = useState(null)
+  const navigate = useNavigate()
 
+  console.log(formData);
   useEffect(()=>{
     if(file){
       handleImageUpload(file)
@@ -60,13 +67,49 @@ export default function CreatePost() {
     }
     
   }
+
+  const handleSubmit = async (e)=>{
+    e.preventDefault()
+
+    if(!file) return setPublishError('Must upload image')
+
+    try {
+      
+      setPublishError(null)
+
+      const res = await fetch('/api/post/create',{
+        method:"POST",
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(formData)
+      })
+
+      const data = await res.json()
+
+      if(!res.ok){
+        setPublishError(data.message)
+        return
+      }
+      setPublishError(null)
+      iziToast.success({
+        message: '<b>Post created successfully!</b>',
+        position: 'topRight',
+        timeout:1500
+      });
+      navigate(`/post/${data.slug}`,{replace:true})
+    } 
+    catch (error) {
+      setPublishError('Something went wrong')
+    }
+  }
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-3xl font-semibold text-center my-7'>Create Post</h1>
-      <form className='flex flex-col gap-4'>
+      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-          <TextInput type='text' placeholder='Title' required id='title' className='flex-1'/>
-          <Select className='flex-1'>
+          <TextInput type='text' placeholder='Title' required className='flex-1' onChange={(e)=>setFormData({...formData,title:e.target.value})}/>
+          <Select className='flex-1' onChange={(e)=>setFormData({...formData,category:e.target.value})}>
             <option value="unCategorized">Select a Category</option>
             <option value="action">Action</option>
             <option value="adventure">Adventure</option>
@@ -100,7 +143,13 @@ export default function CreatePost() {
             {error}
           </Alert>
         }
-        <ReactQuill theme='snow' className='h-72 mb-12 '/>
+        {
+          publishError &&
+          <Alert color='failure'>
+            {publishError}
+          </Alert>
+        }
+        <ReactQuill theme='snow' className='h-72 mb-12' id='content' onChange={(value)=>setFormData({...formData,content:value})}/>
         <Button type='submit' gradientDuoTone='purpleToBlue' className='uppercase mb-8'>Publish</Button>
       </form>
     </div>

@@ -19,7 +19,7 @@ export default function FooterCom() {
                 <Link to='/about'>
                   Zoro's Blog
                 </Link>
-                <Link to='/dashboard'>
+                <Link to='/dashboard?tab=profile'>
                   Dashboard
                 </Link>
               </Footer.LinkGroup>

@@ -72,6 +72,14 @@ export default function DashPost() {
 
         const data = await res.json()
 
+        if(data.success === false){
+          iziToast.error({
+            message: `<b>${data.message}</b>`,
+            position: 'topRight',
+            timeout:2000
+          });
+          return
+        }
         if(res.ok){
           console.log(data.message);
           iziToast.success({

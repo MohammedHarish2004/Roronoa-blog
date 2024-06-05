@@ -99,7 +99,7 @@ export default function UpdatePost() {
 
       const data = await res.json()
 
-      if(!res.ok){
+      if(data.success === false){
         setPublishError(data.message)
         return
       }

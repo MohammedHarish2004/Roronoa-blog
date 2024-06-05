@@ -110,7 +110,7 @@ export default function DashPost() {
               <Table.Row  className='dark:border-gray-700 dark:bg-gray-800'>
                 <Table.Cell>{new Date(post.updatedAt).toLocaleString()}</Table.Cell>
                 <Table.Cell>
-                  <Link to={`/posts/${post.slug}`}>
+                  <Link to={`/post/${post.slug}`}>
                     <img 
                     src={post.image}
                     alt="" 

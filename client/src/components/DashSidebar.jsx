@@ -1,5 +1,5 @@
 import {Sidebar} from 'flowbite-react'
-import {HiArrowSmRight, HiDocumentText, HiLink, HiTrash, HiUser} from 'react-icons/hi'
+import {HiArrowSmRight, HiDocumentText, HiLink, HiTrash, HiUser, HiUserGroup} from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
@@ -129,6 +129,14 @@ export default function DashSidebar() {
                 <Link to='/dashboard?tab=posts'>
                     <Sidebar.Item active={tab === 'posts'} icon={HiDocumentText} labelColor={'dark'} as={'div'} className='mt-2'>
                         Posts
+                    </Sidebar.Item>
+                </Link>
+             }
+             {
+                currentUser.isAdmin && 
+                <Link to='/dashboard?tab=users'>
+                    <Sidebar.Item active={tab === 'users'} icon={HiUserGroup} labelColor={'dark'} as={'div'} className='mt-2'>
+                        Users
                     </Sidebar.Item>
                 </Link>
              }

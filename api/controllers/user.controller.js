@@ -52,11 +52,9 @@ export const getUsers = async (req,res,next)=>{
     }
 
     try {
-        const startIndex = parseInt(req.query.startIndex) || 0
-        const limit = parseInt(req.query.limit) || 9
         const sort = req.query.sort == 'asc' ? 1 : -1
 
-        const users = await User.find().sort({createdAt:sort}).skip(startIndex).limit(limit)
+        const users = await User.find().sort({createdAt:sort})
 
         const userWithoutPasswords = users.map((user)=>{
             const {password:pass,...rest} = user._doc

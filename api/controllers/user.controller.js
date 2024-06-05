@@ -31,8 +31,12 @@ export const updateUser = async (req,res,next)=>{
 
 export const deleteUser = async (req,res,next)=>{
 
-    if(req.user.id !== req.params.id) return next(errorHandler(201,'You can only delete your own account'))
+    if(!req.user.isAdmin && req.user.id !== req.params.id) return next(errorHandler(201,'You can only delete your own account'))
 
+        if(req.user.isAdmin){
+            await User.findByIdAndDelete(req.params.id)
+            res.status(200).json('User deleted')
+        }
         try {
             
             await User.findByIdAndDelete(req.params.id)

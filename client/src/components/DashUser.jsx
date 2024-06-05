@@ -2,11 +2,15 @@ import { Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import {  FaCheck, FaTimes } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import Swal from 'sweetalert2'
 
 export default function DashUser() {
 
     const[users,setUsers] = useState([])
     const {currentUser} = useSelector(state=>state.user)
+    console.log(users);
 
     useEffect(()=>{
 
@@ -15,11 +19,64 @@ export default function DashUser() {
             const data = await res.json()
             setUsers(data.users) 
         }
-        fetchUsers()
-    },[])
+        if(currentUser.isAdmin){
+            fetchUsers()
+        }
+    },[currentUser._id])
+
+    const handleDeleteUser = async (userId, userName) => {
+      Swal.fire({
+          title: 'Are you sure you want to delete?',
+          text: `${userName}`,
+          icon: 'warning',
+          showCancelButton: true,
+          cancelButtonColor: '#3085d6',
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'Yes! Delete'
+      }).then(async (result) => {
+          if (result.isConfirmed) {
+              Swal.fire({
+                  title: 'Are you absolutely sure?',
+                  text: `This action cannot be undone. Deleting ${userName}.`,
+                  icon: 'warning',
+                  showCancelButton: true,
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonColor: '#d33',
+                  confirmButtonText: 'Yes, delete it!'
+              }).then(async (finalResult) => {
+                  if (finalResult.isConfirmed) {
+                      try {
+                          const res = await fetch(`/api/user/delete/${userId}`, {
+                              method: "DELETE"
+                          })
+                          const data = await res.json()
+
+                          if (data.success === false) {
+                              iziToast.error({
+                                  message: `<b>${data.message}</b>`,
+                                  position: 'topRight',
+                                  timeout: 2000
+                              });
+                              return
+                          }
+                          iziToast.success({
+                              message: '<b>User deleted successfully!</b>',
+                              position: 'topRight',
+                              timeout: 1500
+                          });
+                          setUsers((prev)=>prev.filter((user)=>user._id !== userId))
+                      } catch (error) {
+                          console.log(error.message);
+                      }
+                  }
+              });
+          }
+      });
+  }
+
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-6 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-    {currentUser.isAdmin && users.length > 0 ? (
+    {currentUser.isAdmin &&  users.length > 0 ? (
       <>
       <Table hoverable className='shadow-md'>
         <Table.Head>
@@ -52,19 +109,20 @@ export default function DashUser() {
                   {user.isAdmin ? (<FaCheck className='text-green-500'/>) : (<FaTimes className='text-red-500'/>)}
                 </Table.Cell>
                 <Table.Cell>
-                  <span onClick={()=>handleDeleteUser(user._id,user.username)} className='text-red-600 font-medium hover:underline cursor-pointer'>
+                  {
+                    currentUser.isAdmin && !user.isAdmin && currentUser._id !== user._id ?
+                    <span onClick={()=>handleDeleteUser(user._id,user.username)} className='text-red-600 font-medium hover:underline cursor-pointer'>
                     Delete
-                  </span>
+                    </span>
+                    :
+                    <span className='text-cyan-500 font-medium'>Can't delete </span>
+                  }
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
           ))
         }
       </Table>
-      {/* {
-        showmore && 
-        <button onClick={handleShowmore} className='w-full text-teal-500 self-center text-sm py-7 font-medium hover:underline'>Show more</button>
-      } */}
       </>
     ) : (
       <p>No users Available</p>

@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import Comment from './Comment'
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import Swal from 'sweetalert2'
 
 export default function CommentSection({ postId }) {
 
@@ -86,6 +89,46 @@ export default function CommentSection({ postId }) {
         }
       };
 
+      const handleDelete = async (commentId) => {
+
+        Swal.fire({
+            title:'Are you sure want to delete ',
+            icon:'warning',
+            showCancelButton:true,
+            cancelButtonColor:'#3085d6',
+            confirmButtonColor:'#d33',
+            confirmButtonText:'Yes! Delete'
+        }).then(async(result)=>{
+            if(result.isConfirmed){
+                try {
+                    if (!currentUser) {
+                      navigate('/sign-in');
+                      return;
+                    }
+                    const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
+                      method: 'DELETE',
+                    });
+                    if (res.ok) {
+                      const data = await res.json();
+                      setShowComment(showComment.filter((comment) => comment._id !== commentId));
+                    }
+                  } 
+
+                  catch (error) {
+                    console.log(error.message);
+                  }
+            }
+        })
+      };
+
+      const handleEdit = async (comment, editedContent) => {
+        setShowComment(
+          showComment.map((c) =>
+            c._id === comment._id ? { ...c, content: editedContent } : c
+          )
+        );
+      };
+
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {
@@ -146,7 +189,7 @@ export default function CommentSection({ postId }) {
                                 </div>
                             </div>
                             {showComment.map((comment) => (
-                                <Comment key={comment._id} comment={comment} onLike={handleLike} />
+                                <Comment key={comment._id} comment={comment} onLike={handleLike} onDelete={handleDelete} onEdit={handleEdit}/>
                             ))}
                         </>
                     )

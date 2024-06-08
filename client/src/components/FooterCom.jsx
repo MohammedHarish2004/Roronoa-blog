@@ -34,14 +34,17 @@ export default function FooterCom() {
                 >
                   Github
                 </Footer.Link>
-                <Footer.Link href='#'>LinkedIn</Footer.Link>
+                <Footer.Link href='https://www.linkedin.com/authwall?trk=bf&trkInfo=AQHy65-nfm4JmgAAAY_3LTCI4vcc2EG0A1BG-iL0hm0IFcrwZ8aPPPQ4A0QeCp_nvKsKeXfYl2pRQByCoXj2zEBr-w_5Y3VZJsw-wtgZOP1L4Q-Fap30BPTqKJM_h6JWR9E1B8w=&original_referer=&sessionRedirect=https%3A%2F%2Fwww.linkedin.com%2Fin%2Fmohammed-harris-8967842a9%3Futm_source%3Dshare%26utm_campaign%3Dshare_via%26utm_content%3Dprofile%26utm_medium%3Dandroid_app'
+                target='_blank'
+                rel='noopener noreferrer'
+                >LinkedIn</Footer.Link>
               </Footer.LinkGroup>
             </div>
             <div>
               <Footer.Title title='Legal' />
               <Footer.LinkGroup col>
-                <Footer.Link href='#'>Privacy Policy</Footer.Link>
-                <Footer.Link href='#'>Terms &amp; Conditions</Footer.Link>
+                <Footer.Link >Privacy Policy</Footer.Link>
+                <Footer.Link >Terms &amp; Conditions</Footer.Link>
               </Footer.LinkGroup>
             </div>
           </div>

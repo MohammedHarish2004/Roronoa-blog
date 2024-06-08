@@ -1,4 +1,5 @@
 import User from "../models/user.model.js"
+import Post from "../models/post.model.js"
 import { errorHandler } from "../utils/error.js"
 import bcryptjs from 'bcryptjs'
 
@@ -40,6 +41,7 @@ export const deleteUser = async (req,res,next)=>{
         try {
             
             await User.findByIdAndDelete(req.params.id)
+            await Post.deleteMany({userId:req.params.id})
             res.clearCookie('access_token')
             res.status(200).json('User deleted')
         } 
